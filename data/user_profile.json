@@ -1,0 +1,30 @@
+{
+    "id": "artem",
+    "name": "Artem",
+    "roles": [
+      "AI Research Engineer",
+      "Exocortex / Exocore creator",
+      "ML / LLM Engineer"
+    ],
+    "current_projects": [
+      "Exocortex (personal AI orchestrator and second brain)",
+      "FreeMinder (thought → plan pipeline)",
+      "Cardano Proposal Examiner (AI-assisted governance)"
+    ],
+    "preferences": {
+      "work_style": "deep thinking, multi-step reasoning, prefers small testable modules over big monoliths",
+      "tools": [
+        "Python",
+        "OpenAI API",
+        "Telegram",
+        "Google Workspace",
+        "Next.js"
+      ],
+      "goals_2025": [
+        "Ship a working Exocortex MVP for personal use",
+        "Simplify note → task → calendar pipeline",
+        "Use AI to augment thinking, not replace it"
+      ]
+    },
+    "narrative": "Artem is building Exocortex as a digital extension of his thinking: a system that captures raw thoughts from Telegram and other channels, structures them into tasks and ideas, and orchestrates AI agents to act on them. The first step is FreeMinder — a simple, reliable pipeline from raw notes to planned actions, tightly integrated with his real calendar and daily life."
+  }
