@@ -59,6 +59,7 @@ class Config(BaseSettings):
         env_file = ".env"
         env_file_encoding = "utf-8"
         case_sensitive = False
+        extra = "ignore"  # Ignore extra environment variables
 
     def get_user_profile_path(self) -> Path:
         """Get the resolved user profile path relative to project root."""
