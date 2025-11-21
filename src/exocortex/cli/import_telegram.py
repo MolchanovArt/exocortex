@@ -82,6 +82,7 @@ def import_telegram_messages(limit: int = 50) -> tuple[int, int]:
             timeline_item = TimelineItem(
                 source_type="telegram",
                 source_id=telegram_msg.id,
+                telegram_message_id=telegram_msg.id,
                 timestamp=msg_payload.timestamp,
                 title=title,
                 content=content,

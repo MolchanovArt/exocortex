@@ -49,6 +49,27 @@ class TelegramMessage(Base):
         return f"<TelegramMessage(id={self.id}, chat_id={self.chat_id}, message_id={self.message_id})>"
 
 
+class CalendarEvent(Base):
+    """ORM model for Google Calendar events."""
+
+    __tablename__ = "calendar_events"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    calendar_id = Column(String, nullable=False, index=True)
+    event_id = Column(String, nullable=False, index=True)
+    title = Column(String, nullable=False)
+    description = Column(Text, nullable=True)
+    start_time = Column(DateTime, nullable=False, index=True)
+    end_time = Column(DateTime, nullable=True)
+    raw_json = Column(Text, nullable=True)  # Store as JSON string
+
+    # Relationship to timeline items
+    timeline_items = relationship("TimelineItem", back_populates="calendar_event", cascade="all, delete-orphan")
+
+    def __repr__(self) -> str:
+        return f"<CalendarEvent(id={self.id}, calendar_id={self.calendar_id}, event_id={self.event_id})>"
+
+
 class TimelineItem(Base):
     """ORM model for normalized timeline items from various sources."""
 
@@ -56,14 +77,19 @@ class TimelineItem(Base):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     source_type = Column(String, nullable=False, index=True)  # e.g., "telegram", "calendar", "drive"
-    source_id = Column(Integer, ForeignKey("telegram_messages.id"), nullable=True)  # FK to source table
+    source_id = Column(Integer, nullable=True)  # Generic reference to source table (FK handled per source_type)
     timestamp = Column(DateTime, nullable=False, index=True)
     title = Column(String, nullable=True)
     content = Column(Text, nullable=False)
     meta = Column(Text, nullable=True)  # Store as JSON string
 
+    # Foreign keys for specific source types (using composite approach)
+    telegram_message_id = Column(Integer, ForeignKey("telegram_messages.id"), nullable=True)
+    calendar_event_id = Column(Integer, ForeignKey("calendar_events.id"), nullable=True)
+
     # Relationships
     telegram_message = relationship("TelegramMessage", back_populates="timeline_items")
+    calendar_event = relationship("CalendarEvent", back_populates="timeline_items")
 
     def __repr__(self) -> str:
         return f"<TimelineItem(id={self.id}, source_type={self.source_type}, timestamp={self.timestamp})>"
