@@ -38,6 +38,7 @@ class Config(BaseSettings):
 
     # OpenAI
     openai_api_key: Optional[str] = Field(None, env="OPENAI_API_KEY")
+    openai_model: str = Field("gpt-4o-mini", env="OPENAI_MODEL")
 
     # Telegram
     telegram_bot_token: Optional[str] = Field(None, env="TELEGRAM_BOT_TOKEN")
