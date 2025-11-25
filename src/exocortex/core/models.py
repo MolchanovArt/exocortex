@@ -108,8 +108,12 @@ class MindItem(Base):
     timeline_item_id = Column(Integer, ForeignKey("timeline_items.id"), nullable=False, index=True, unique=True)
     item_type = Column(String, nullable=False, index=True)  # "task", "idea", "note", "noise"
     summary = Column(Text, nullable=False)
-    status = Column(String, nullable=False, default="new", index=True)  # "new", "planned", "done"
-    planned_for = Column(DateTime, nullable=True, index=True)
+    status = Column(String, nullable=False, default="new", index=True)  # "new", "planned", "in_progress", "done"
+    planned_for = Column(DateTime, nullable=True, index=True)  # Legacy field, kept for backward compatibility
+    planned_start = Column(DateTime, nullable=True, index=True)
+    planned_end = Column(DateTime, nullable=True, index=True)
+    done_at = Column(DateTime, nullable=True, index=True)
+    completion_comment = Column(Text, nullable=True)
     created_at = Column(DateTime, nullable=False, default=func.now())
 
     # Relationship

@@ -203,7 +203,11 @@ def show_timeline(limit: int, future_only: bool = False) -> None:
 
 def main() -> None:
     """Main CLI entry point."""
-    parser = argparse.ArgumentParser(description="Query Exocortex data")
+    parser = argparse.ArgumentParser(
+        description="Query Exocortex data",
+        epilog="Note: Use 'python -m exocortex.cli.plan_tasks' to plan tasks and "
+        "'python -m exocortex.cli.review_tasks' to review overdue tasks.",
+    )
     parser.add_argument(
         "--show-profile",
         action="store_true",
