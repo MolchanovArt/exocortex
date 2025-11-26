@@ -12,6 +12,53 @@ from sqlalchemy.orm import relationship
 from exocortex.core.db import Base
 
 
+# Pydantic models for planning preferences
+class WorkHours(BaseModel):
+    """Work hours configuration."""
+
+    start: str = Field(..., description="Start time in HH:MM format")
+    end: str = Field(..., description="End time in HH:MM format")
+
+
+class TimeBlock(BaseModel):
+    """A time block (e.g., sleep block)."""
+
+    start: str = Field(..., description="Start time in HH:MM format")
+    end: str = Field(..., description="End time in HH:MM format")
+
+
+class SoftBlock(BaseModel):
+    """A soft block (e.g., meal times, breaks)."""
+
+    label: str = Field(..., description="Label for the block (e.g., 'lunch')")
+    start: str = Field(..., description="Start time in HH:MM format")
+    end: str = Field(..., description="End time in HH:MM format")
+
+
+class EnergyProfileEntry(BaseModel):
+    """An energy profile entry for a time period."""
+
+    label: str = Field(..., description="Label for the period (e.g., 'morning')")
+    start: str = Field(..., description="Start time in HH:MM format")
+    end: str = Field(..., description="End time in HH:MM format")
+    level: str = Field(..., description="Energy level: 'high', 'medium', or 'low'")
+
+
+class PlanningPreferences(BaseModel):
+    """Planning preferences configuration."""
+
+    timezone: str = Field(default="Europe/Riga", description="Timezone string (e.g., 'Europe/Riga')")
+    work_days: List[str] = Field(default_factory=lambda: ["Mon", "Tue", "Wed", "Thu", "Fri"], description="Work days")
+    work_hours: WorkHours = Field(
+        default_factory=lambda: WorkHours(start="10:00", end="19:00"), description="Work hours"
+    )
+    sleep_blocks: List[TimeBlock] = Field(default_factory=list, description="Sleep blocks")
+    soft_blocks: List[SoftBlock] = Field(default_factory=list, description="Soft blocks (meals, breaks)")
+    max_focus_blocks_per_day: int = Field(default=3, description="Maximum focus blocks per day")
+    default_task_duration_minutes: int = Field(default=60, description="Default task duration in minutes")
+    avoid_after: Optional[str] = Field(default=None, description="Avoid scheduling after this time (HH:MM)")
+
+
 # Pydantic models
 class UserProfile(BaseModel):
     """User profile model loaded from JSON."""

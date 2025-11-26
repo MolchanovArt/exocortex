@@ -1,30 +1,54 @@
 {
-    "id": "artem",
-    "name": "Artem",
-    "roles": [
-      "AI Research Engineer",
-      "Exocortex / Exocore creator",
-      "ML / LLM Engineer"
+  "id": "artem",
+  "name": "Artem",
+  "roles": [
+    "AI Research Engineer",
+    "Exocortex / Exocore creator",
+    "ML / LLM Engineer"
+  ],
+  "current_projects": [
+    "Exocortex (personal AI orchestrator and second brain)",
+    "FreeMinder (thought → plan pipeline)",
+    "Cardano Proposal Examiner (AI-assisted governance)"
+  ],
+  "preferences": {
+    "work_style": "deep thinking, multi-step reasoning, prefers small testable modules over big monoliths",
+    "tools": [
+      "Python",
+      "OpenAI API",
+      "Telegram",
+      "Google Workspace",
+      "Next.js"
     ],
-    "current_projects": [
-      "Exocortex (personal AI orchestrator and second brain)",
-      "FreeMinder (thought → plan pipeline)",
-      "Cardano Proposal Examiner (AI-assisted governance)"
+    "goals_2025": [
+      "Ship a working Exocortex MVP for personal use",
+      "Simplify note → task → calendar pipeline",
+      "Use AI to augment thinking, not replace it"
     ],
-    "preferences": {
-      "work_style": "deep thinking, multi-step reasoning, prefers small testable modules over big monoliths",
-      "tools": [
-        "Python",
-        "OpenAI API",
-        "Telegram",
-        "Google Workspace",
-        "Next.js"
+    "planning_preferences": {
+      "timezone": "Europe/Tbilisi",
+      "work_days": ["Mon", "Tue", "Wed", "Thu", "Fri"],
+      "work_hours": {
+        "start": "10:00",
+        "end": "19:00"
+      },
+      "sleep_blocks": [
+        { "start": "02:00", "end": "11:00" }
       ],
-      "goals_2025": [
-        "Ship a working Exocortex MVP for personal use",
-        "Simplify note → task → calendar pipeline",
-        "Use AI to augment thinking, not replace it"
-      ]
+      "soft_blocks": [
+        { "label": "breakfast", "start": "11:00", "end": "12:00" },
+        { "label": "lunch", "start": "15:00", "end": "16:00" },
+        { "label": "dinner", "start": "21:00", "end": "22:00" }
+      ],
+      "max_focus_blocks_per_day": 3,
+      "default_task_duration_minutes": 60,
+      "avoid_after": "21:00"
     },
-    "narrative": "Artem is building Exocortex as a digital extension of his thinking: a system that captures raw thoughts from Telegram and other channels, structures them into tasks and ideas, and orchestrates AI agents to act on them. The first step is FreeMinder — a simple, reliable pipeline from raw notes to planned actions, tightly integrated with his real calendar and daily life."
-  }
+    "energy_profile": [
+      { "label": "morning", "start": "07:00", "end": "12:00", "level": "high" },
+      { "label": "afternoon", "start": "12:00", "end": "17:00", "level": "medium" },
+      { "label": "evening", "start": "17:00", "end": "21:00", "level": "low" }
+    ]
+  },
+  "narrative": "Artem is building Exocortex as a digital extension of his thinking..."
+}

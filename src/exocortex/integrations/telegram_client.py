@@ -8,7 +8,7 @@ from typing import List, Optional
 
 from pydantic import BaseModel, Field
 from telegram import Bot
-from telegram.error import TelegramError
+from telegram.error import TelegramError, TimedOut, NetworkError
 
 from exocortex.core.config import config
 
@@ -107,23 +107,36 @@ async def _fetch_recent_messages_async(limit: int = 50) -> List[TelegramMessageP
         # Try to close bot, but don't fail if it errors (e.g., rate limit)
         try:
             await bot.close()
-        except Exception:
-            pass
+        except Exception as close_error:
+            # Silently ignore close errors, especially rate limits
+            logger.debug(f"Error closing bot (non-critical): {close_error}")
         raise
     except Exception as e:
         logger.error(f"Unexpected error fetching Telegram messages: {e}")
         # Try to close bot, but don't fail if it errors
         try:
             await bot.close()
-        except Exception:
-            pass
+        except Exception as close_error:
+            # Silently ignore close errors
+            logger.debug(f"Error closing bot (non-critical): {close_error}")
         raise
 
     # Close the bot session normally
+    # Note: We don't strictly need to close the bot, but it's good practice
+    # However, if there's a rate limit or other error, we can safely ignore it
+    # since the messages have already been fetched successfully
     try:
         await bot.close()
+    except (TelegramError, TimedOut, NetworkError) as e:
+        # Ignore rate limits and network errors on close - they're non-critical
+        # The messages have already been fetched, so closing is just cleanup
+        error_msg = str(e)
+        if "429" in error_msg or "Too Many Requests" in error_msg or "rate limit" in error_msg.lower():
+            logger.debug(f"Rate limit on bot.close() - safely ignored (messages already fetched)")
+        else:
+            logger.debug(f"Error closing bot (non-critical): {e}")
     except Exception as e:
-        # Ignore errors on close (e.g., if already closed or rate limited)
+        # Catch any other exceptions and ignore them
         logger.debug(f"Error closing bot (non-critical): {e}")
 
     logger.info(f"Fetched {len(messages)} messages from chat {target_chat_id}")

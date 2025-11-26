@@ -2,10 +2,10 @@
 
 import json
 from pathlib import Path
-from typing import Optional
+from typing import List, Optional
 
 from exocortex.core.config import config
-from exocortex.core.models import UserProfile
+from exocortex.core.models import EnergyProfileEntry, PlanningPreferences, UserProfile
 
 
 # Global cache for user profile
@@ -41,4 +41,44 @@ def reload_user_profile() -> UserProfile:
     global _user_profile
     _user_profile = None
     return get_user_profile()
+
+
+def get_planning_preferences() -> PlanningPreferences:
+    """
+    Get planning preferences from user profile with defaults.
+
+    Returns:
+        PlanningPreferences instance with defaults applied for missing fields.
+    """
+    profile = get_user_profile()
+    prefs_data = profile.preferences.get("planning_preferences", {})
+
+    if not prefs_data:
+        # Return defaults
+        return PlanningPreferences()
+
+    try:
+        return PlanningPreferences(**prefs_data)
+    except Exception:
+        # If parsing fails, return defaults
+        return PlanningPreferences()
+
+
+def get_energy_profile() -> List[EnergyProfileEntry]:
+    """
+    Get energy profile from user profile.
+
+    Returns:
+        List of EnergyProfileEntry objects, empty list if not found.
+    """
+    profile = get_user_profile()
+    energy_data = profile.preferences.get("energy_profile", [])
+
+    if not energy_data:
+        return []
+
+    try:
+        return [EnergyProfileEntry(**entry) for entry in energy_data]
+    except Exception:
+        return []
 

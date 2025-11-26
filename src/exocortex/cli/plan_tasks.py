@@ -7,6 +7,7 @@ from typing import List, Optional
 
 from exocortex.core.db import get_session
 from exocortex.core.models import MindItem, TimelineItem
+from exocortex.planning.slots import suggest_slots
 
 
 def get_unplanned_tasks(session, limit: int = 20) -> List[MindItem]:
@@ -103,13 +104,47 @@ def plan_task_interactive(task: MindItem, session) -> bool:
 
     # Prompt user
     while True:
-        response = input("\n[s]kip / [t]oday / [m]tomorrow / [d]ate / [q]uit: ").strip().lower()
+        response = input("\n[s]kip / [t]oday / [m]tomorrow / [d]ate / [a]uto / [q]uit: ").strip().lower()
 
         if response == "q":
             return False  # Signal to quit
 
         if response == "s":
             return True  # Skip, but continue with next task
+
+        if response == "a":
+            # Auto-suggest slots
+            slots = suggest_slots(session, days_ahead=7, max_suggestions=3)
+            if not slots:
+                print("No free slots found in the next 7 days. Try [d]ate or adjust preferences.")
+                continue
+
+            # Display available slots
+            print("\nAvailable slots:")
+            for i, slot in enumerate(slots, 1):
+                energy_label = f" ({slot.energy_level} energy)" if slot.energy_level else ""
+                print(f"  {i}) {slot.start.strftime('%Y-%m-%d %H:%M')}–{slot.end.strftime('%H:%M')}{energy_label}")
+
+            # Prompt for slot selection
+            while True:
+                slot_input = input("Choose a slot number or [s]kip: ").strip().lower()
+                if slot_input == "s":
+                    return True  # Skip this task
+
+                try:
+                    slot_num = int(slot_input)
+                    if 1 <= slot_num <= len(slots):
+                        selected_slot = slots[slot_num - 1]
+                        planned_start = selected_slot.start
+                        planned_end = selected_slot.end
+                        break
+                    else:
+                        print(f"Please enter a number between 1 and {len(slots)}.")
+                except ValueError:
+                    print("Invalid input. Please enter a number or 's' to skip.")
+
+            # Break out of outer loop
+            break
 
         if response == "t":
             # Plan for today at 10:00
@@ -136,7 +171,7 @@ def plan_task_interactive(task: MindItem, session) -> bool:
                 print(f"Error: {e}")
                 continue
 
-        print("Invalid option. Please choose s, t, m, d, or q.")
+        print("Invalid option. Please choose s, t, m, d, a, or q.")
 
     # Update task
     task.planned_start = planned_start
