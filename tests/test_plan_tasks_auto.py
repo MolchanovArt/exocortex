@@ -126,3 +126,4 @@ def test_plan_task_auto_no_slots(db_session):
             assert task.status != "planned"
             assert task.planned_start is None
 
+
